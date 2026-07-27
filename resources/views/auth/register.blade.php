@@ -20,13 +20,12 @@
 
                 <!-- Password Input -->
                 <div>
-                    <x-forms.input label="{{ __('Password') }}" name="password" type="password" placeholder="••••••••" />
+                    <x-forms.input label="{{ __('Password') }}" name="password" type="password" autocomplete="new-password" placeholder="••••••••" passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}" />
                 </div>
 
                 <!-- Confirm Password Input -->
                 <div>
-                    <x-forms.input label="{{ __('Confirm Password') }}" name="password_confirmation" type="password"
-                        placeholder="••••••••" />
+                    <x-forms.input label="{{ __('Confirm Password') }}" name="password_confirmation" type="password" autocomplete="new-password" placeholder="••••••••" passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}" />
                 </div>
 
                 <!-- Register Button -->

@@ -2,45 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable(['post_id', 'user_id', 'ip_address', 'user_agent', 'referer', 'device_type', 'browser', 'browser_version', 'platform', 'country_code', 'region', 'city', 'timezone', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'session_duration', 'is_bot', 'is_mobile', 'extra_data', 'viewed_at'])]
 class PostView extends Model
 {
     /** @use HasFactory<\Database\Factories\PostViewFactory> */
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'post_id',
-        'user_id',
-        'ip_address',
-        'user_agent',
-        'referer',
-        'device_type',
-        'browser',
-        'browser_version',
-        'platform',
-        'country_code',
-        'region',
-        'city',
-        'timezone',
-        'utm_source',
-        'utm_medium',
-        'utm_campaign',
-        'utm_term',
-        'utm_content',
-        'session_duration',
-        'is_bot',
-        'is_mobile',
-        'extra_data',
-        'viewed_at',
-    ];
 
     /**
      * Get the attributes that should be cast.
@@ -74,38 +46,60 @@ class PostView extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeAuthenticated($query)
+    /**
+     * Scope a query to only include authenticated post views.
+     */
+    #[Scope]
+    protected function authenticated($query)
     {
-        return $query->whereNotNull('user_id');
+        $query->whereNotNull('user_id');
     }
 
-    public function scopeAnonymous($query)
+    /**
+     * Scope a query to only include anonymous post views.
+     */
+    protected function anonymous($query)
     {
-        return $query->whereNull('user_id');
+        $query->whereNull('user_id');
     }
 
-    public function scopeNotBot($query)
+    /**
+     * Scope a query to only include not bot post views.
+     */
+    protected function notBot($query)
     {
-        return $query->where('is_bot', false);
+        $query->where('is_bot', false);
     }
 
-    public function scopeMobile($query)
+    /**
+     * Scope a query to only include mobile post views.
+     */
+    protected function mobile($query)
     {
-        return $query->where('is_mobile', true);
+        $query->where('is_mobile', true);
     }
 
-    public function scopeDesktop($query)
+    /**
+     * Scope a query to only include desktop post views.
+     */
+    protected function desktop($query)
     {
-        return $query->where('is_mobile', false);
+        $query->where('is_mobile', false);
     }
 
-    public function scopeByCountry($query, string $countryCode)
+    /**
+     * Scope a query to only include by country post views.
+     */
+    protected function byCountry($query, string $countryCode)
     {
-        return $query->where('country_code', $countryCode);
+        $query->where('country_code', $countryCode);
     }
 
-    public function scopeWithUtm($query)
+    /**
+     * Scope a query to only include with utm post views.
+     */
+    protected function withUtm($query)
     {
-        return $query->whereNotNull('utm_source');
+        $query->whereNotNull('utm_source');
     }
 }

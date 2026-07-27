@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Post;
+use App\Models\PostView;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PostView>
+ * @extends Factory<PostView>
  */
 class PostViewFactory extends Factory
 {

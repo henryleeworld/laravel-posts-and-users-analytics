@@ -2,32 +2,19 @@
 
 namespace App\Models;
 
+use Database\Factories\PostFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['title', 'slug', 'excerpt', 'content', 'featured_image', 'user_id', 'category_id', 'status_id', 'published_at'])]
 class Post extends Model
 {
-    /** @use HasFactory<\Database\Factories\PostFactory> */
+    /** @use HasFactory<PostFactory> */
     use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'title',
-        'slug',
-        'excerpt',
-        'content',
-        'featured_image',
-        'user_id',
-        'category_id',
-        'status_id',
-        'published_at',
-    ];
 
     /**
      * Get the attributes that should be cast.
@@ -73,21 +60,29 @@ class Post extends Model
         return $this->belongsTo(PostStatus::class, 'status_id');
     }
 
-    public function scopePublished($query)
-    {
-        return $query->where('status_id', 2)->whereNotNull('published_at');
-    }
-
-    public function scopeFeatured($query)
-    {
-        return $query->whereNotNull('featured_image');
-    }
-
     /**
      * Get the views for the post.
      */
     public function views(): HasMany
     {
         return $this->hasMany(PostView::class);
+    }
+
+    /**
+     * Scope a query to only include published posts.
+     */
+    #[Scope]
+    protected function published($query)
+    {
+        $query->where('status_id', 2)->whereNotNull('published_at');
+    }
+
+    /**
+     * Scope a query to only include featured posts.
+     */
+    #[Scope]
+    protected function featured($query)
+    {
+        return $query->whereNotNull('featured_image');
     }
 }
